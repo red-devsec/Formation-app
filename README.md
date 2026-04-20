@@ -1,6 +1,37 @@
-# 💫 About Me:
-# 🎓 Formation App<br><br>Application web de gestion de formations - Mini-projet DevOps CI/CD<br><br>## 📋 Description<br><br>Formation App est une application web simple permettant de gérer et consulter un catalogue de formations. Ce projet sert de support pour la mise en place d'une pipeline CI/CD complète.<br><br>## 🚀 Technologies utilisées<br><br>- **Backend** : Python Flask<br>- **Base de données** : PostgreSQL 16<br>- **Conteneurisation** : Docker<br>- **CI/CD** : GitHub Actions<br>- **Versioning** : Git & GitHub<br><br>## 📁 Structure du projet<br><br>formation-app/<br>├── app.py # Application principale Flask<br>├── requirements.txt # Dépendances Python<br>├── Dockerfile # Configuration Docker<br>├── docker-compose.yml # Orchestration des services<br>├── .github/<br>│ └── workflows/<br>│ └── ci-cd.yml # Pipeline CI/CD<br>└── README.md # Documentation<br><br><br>## 🔧 Installation locale<br><br>### Prérequis<br>- Python 3.9+<br>- Docker & Docker Compose<br>- PostgreSQL (optionnel)<br><br>### Lancement avec Docker<br><br>```bash<br># Construire l'image<br>docker build -t formation-app .<br><br>Lancer l'application<br>docker run -d -p 5000:5000 --name formation-app formation-app<br><br>Démarrer les services (app + PostgreSQL)<br>docker-compose up -d<br><br>Arrêter les services<br>docker-compose down<br><br>🔄 Pipeline CI/CD<br>Le pipeline GitHub Actions exécute automatiquement :<br><br>✅ Checkout du code<br><br>🔨 Build de l'image Docker<br><br>🗄️ Test de connexion PostgreSQL<br><br>🚀 Déploiement du conteneur de test<br><br>🧪 Tests des endpoints API<br><br>🧹 Nettoyage<br><br>
+<p align="center">
+  <img src="https://img.shields.io/badge/Flask-3.0.3-000000?logo=flask" alt="Flask">
+  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Docker-24.0-2496ED?logo=docker" alt="Docker">
+  <img src="https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?logo=githubactions" alt="GitHub Actions">
+</p>
 
+<h1 align="center">🎓 Formation App</h1>
+<p align="center"><strong>EST Salé — Université Mohammed V de Rabat</strong></p>
 
-# 💻 Tech Stack:
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+---
+
+## 🎯 À propos
+
+**Formation App** est une plateforme de gestion de catalogue de formations développée dans le cadre d'un mini-projet DevOps. L'application démontre l'intégration complète d'une pipeline CI/CD avec Docker, PostgreSQL et GitHub Actions.
+
+### ✨ Fonctionnalités
+
+- 📚 **Catalogue interactif** — Parcourir, rechercher et filtrer les formations
+- ✏️ **Gestion CRUD** — Ajouter et supprimer des formations
+- 🔌 **API REST** — Endpoints JSON pour intégrations externes
+- 🐘 **PostgreSQL** — Base de données relationnelle robuste
+- 🐳 **Dockerisé** — Déploiement en un clic
+- ⚡ **CI/CD** — Pipeline automatisé avec GitHub Actions
+
+## 🚀 Démarrage rapide
+
+```bash
+# Cloner
+git clone https://github.com/red-devsec/Formation-app.git
+cd Formation-app
+
+# Lancer
+docker-compose up -d
+
+# C'est parti !
+open http://localhost:5000

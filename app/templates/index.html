@@ -109,30 +109,6 @@
     padding: .18rem .55rem; border-radius: 5px;
   }
 
-  /* ── API BOX ── */
-  .api-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-  }
-  .api-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: .85rem; }
-  .api-row {
-    display: flex; align-items: center; gap: .65rem;
-    padding: .4rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .api-row:last-child { border-bottom: none; }
-  .method {
-    font-size: .68rem; font-weight: 700;
-    padding: .18rem .5rem; border-radius: 4px;
-    text-transform: uppercase; min-width: 40px;
-    text-align: center; flex-shrink: 0;
-  }
-  .get { background: #0d2a18; color: var(--success); border: 1px solid #1a4a28; }
-  .endpoint-path { font-family: monospace; font-size: .85rem; color: var(--accent2); }
-  .endpoint-desc { color: var(--muted); font-size: .8rem; margin-left: auto; }
-
   @media (max-width: 500px) {
     .endpoint-desc { display: none; }
   }
@@ -181,23 +157,6 @@
   {% endfor %}
 </div>
 
-<h2 class="section-title">Endpoints API disponibles</h2>
-<div class="api-box">
-  <h3>REST JSON</h3>
-  <div class="api-row">
-    <span class="method get">GET</span>
-    <span class="endpoint-path">/api/formations</span>
-    <span class="endpoint-desc">Liste toutes les formations</span>
-  </div>
-  <div class="api-row">
-    <span class="method get">GET</span>
-    <span class="endpoint-path">/api/formations/&lt;id&gt;</span>
-    <span class="endpoint-desc">Détail d'une formation</span>
-  </div>
-  <div class="api-row">
-    <span class="method get">GET</span>
-    <span class="endpoint-path">/health</span>
-    <span class="endpoint-desc">Statut de la base de données</span>
-  </div>
-</div>
+<!-- SECTION API SUPPRIMÉE -->
+
 {% endblock %}
