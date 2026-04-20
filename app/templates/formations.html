@@ -5,72 +5,89 @@
 <style>
   .page-header {
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem;
   }
-  .page-header h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.8rem; font-weight: 800;
-  }
+  .page-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
 
-  /* Filters */
+  /* ── FILTERS ── */
   .filters {
     background: var(--surface);
-    border: 1px solid var(--border); border-radius: 12px;
-    padding: 1rem 1.2rem;
-    display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
-    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .85rem 1rem;
+    margin-bottom: 1.5rem;
   }
-  .filters form { display: flex; gap: .75rem; flex-wrap: wrap; width: 100%; }
-  .filters input, .filters select {
+  .filters form {
+    display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+  }
+  .filters input,
+  .filters select {
     background: var(--bg);
-    border: 1px solid var(--border); border-radius: 8px;
-    color: var(--text); padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: .45rem .85rem;
     font-family: inherit; font-size: .875rem;
-    outline: none; transition: border-color .2s;
+    outline: none; transition: border-color .15s;
   }
-  .filters input:focus, .filters select:focus { border-color: var(--accent); }
-  .filters input { flex: 1; min-width: 200px; }
-  .filters select { min-width: 160px; }
-  .filters .btn { white-space: nowrap; }
+  .filters input:focus,
+  .filters select:focus { border-color: var(--accent); }
+  .filters input { flex: 1; min-width: 180px; }
+  .filters select option { background: var(--surface); }
+  .btn-reset {
+    display: inline-flex; align-items: center;
+    padding: .45rem .85rem; border-radius: 6px;
+    font-size: .85rem; font-weight: 500;
+    border: 1px solid var(--border);
+    color: var(--muted); text-decoration: none;
+    transition: color .15s, border-color .15s;
+  }
+  .btn-reset:hover { color: var(--text); border-color: var(--muted); }
 
-  /* Cards grid */
+  .result-count { color: var(--muted); font-size: .85rem; margin-bottom: 1.1rem; }
+  .result-count strong { color: var(--text); }
+
+  /* ── CARDS ── */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
   }
   .card {
     background: var(--surface);
-    border: 1px solid var(--border); border-radius: 16px;
-    padding: 1.5rem; display: flex; flex-direction: column;
-    transition: all .25s;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex; flex-direction: column;
+    transition: border-color .15s, transform .15s;
   }
   .card:hover {
     border-color: var(--accent);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0,0,0,.3);
+    transform: translateY(-2px);
   }
   .card-cat {
-    font-size: .72rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .06em; color: var(--accent2);
-    margin-bottom: .75rem;
+    font-size: .72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--accent2); margin-bottom: .6rem;
   }
   .card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.05rem; font-weight: 700; margin-bottom: .6rem;
+    font-size: .97rem; font-weight: 700;
+    color: var(--text); margin-bottom: .5rem;
+    line-height: 1.4;
   }
   .card p {
-    color: var(--muted); font-size: .875rem;
-    line-height: 1.6; flex: 1; margin-bottom: 1rem;
+    color: var(--muted); font-size: .855rem;
+    line-height: 1.6; flex: 1; margin-bottom: .85rem;
   }
   .card-meta {
-    display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem;
+    display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .85rem;
   }
   .tag {
-    display: inline-flex; align-items: center; gap: .3rem;
-    background: rgba(255,255,255,.05);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: .2rem .6rem; font-size: .78rem; color: var(--muted);
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: .18rem .55rem;
+    font-size: .775rem; color: var(--muted);
   }
   .card-footer {
     display: flex; justify-content: space-between; align-items: center;
@@ -78,18 +95,17 @@
   }
   .card-id { color: var(--muted); font-size: .75rem; font-family: monospace; }
 
-  /* Empty state */
+  /* ── EMPTY ── */
   .empty {
-    text-align: center; padding: 4rem 1rem; color: var(--muted);
-    grid-column: 1/-1;
+    text-align: center; padding: 3.5rem 1rem;
+    color: var(--muted); grid-column: 1 / -1;
   }
-  .empty h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; margin-bottom: .5rem; }
+  .empty h3 { font-size: 1.1rem; margin-bottom: .5rem; color: var(--text); }
+  .empty a { color: var(--accent); text-decoration: none; }
 
-  /* Count */
-  .result-count {
-    color: var(--muted); font-size: .85rem; margin-bottom: 1.25rem;
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
   }
-  .result-count strong { color: var(--text); }
 </style>
 {% endblock %}
 
@@ -99,30 +115,27 @@
   <a href="{{ url_for('main.add_formation') }}" class="btn btn-primary">+ Nouvelle formation</a>
 </div>
 
-<!-- Filtres -->
 <div class="filters">
   <form method="GET">
-    <input type="text" name="search" placeholder="Rechercher une formation…"
+    <input type="text" name="search"
+           placeholder="Rechercher une formation…"
            value="{{ search }}"/>
     <select name="categorie">
       <option value="">Toutes les catégories</option>
       {% for cat in categories %}
-        <option value="{{ cat }}" {{ 'selected' if cat == selected_cat }}>{{ cat }}</option>
+        <option value="{{ cat }}" {{ 'selected' if cat == selected_cat else '' }}>{{ cat }}</option>
       {% endfor %}
     </select>
     <button type="submit" class="btn btn-primary">Filtrer</button>
     {% if search or selected_cat %}
-      <a href="{{ url_for('main.formations') }}" class="btn-ghost"
-         style="display:inline-flex;align-items:center;padding:.45rem 1rem;border-radius:8px;
-                border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.85rem;">
-        Réinitialiser
-      </a>
+      <a href="{{ url_for('main.formations') }}" class="btn-reset">Réinitialiser</a>
     {% endif %}
   </form>
 </div>
 
 <p class="result-count">
-  <strong>{{ formations | length }}</strong> formation{{ 's' if formations | length != 1 }} trouvée{{ 's' if formations | length != 1 }}
+  <strong>{{ formations | length }}</strong>
+  formation{{ 's' if formations | length != 1 else '' }} trouvée{{ 's' if formations | length != 1 else '' }}
 </p>
 
 <div class="grid">
@@ -138,8 +151,7 @@
       </div>
       <div class="card-footer">
         <span class="card-id">#{{ f.id }}</span>
-        <form action="{{ url_for('main.delete_formation', id=f.id) }}"
-              method="POST"
+        <form action="{{ url_for('main.delete_formation', id=f.id) }}" method="POST"
               onsubmit="return confirm('Supprimer « {{ f.titre }} » ?')">
           <button type="submit" class="btn btn-danger">Supprimer</button>
         </form>
@@ -149,8 +161,7 @@
   {% else %}
     <div class="empty">
       <h3>Aucune formation trouvée</h3>
-      <p>Modifiez vos critères de recherche ou <a href="{{ url_for('main.add_formation') }}"
-         style="color:var(--accent)">ajoutez une formation</a>.</p>
+      <p>Modifiez vos critères ou <a href="{{ url_for('main.add_formation') }}">ajoutez une formation</a>.</p>
     </div>
   {% endif %}
 </div>

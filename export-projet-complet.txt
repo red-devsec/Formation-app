@@ -1,0 +1,1268 @@
+================================================================================
+                    EXPORT COMPLET DU PROJET FORMATION-APP
+                    Date : 2026-04-20 17:58:16
+================================================================================
+
+================================================================================
+📁 DOSSIER : .github
+================================================================================
+
+
+
+
+================================================================================
+📁 DOSSIER : app
+================================================================================
+
+
+
+
+================================================================================
+📄 FICHIER : .gitignore
+================================================================================
+
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.sqlite
+
+
+
+
+================================================================================
+📄 FICHIER : docker-compose.yml
+================================================================================
+
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: formations_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: formations_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d formations_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formations_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@db:5432/formations_db
+      SECRET_KEY: super-secret-key-change-in-prod
+      FLASK_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: formations_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@estsale.ma
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - app_network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    name: formations_postgres_data
+
+networks:
+  app_network:
+    name: formations_network
+    driver: bridge
+
+
+
+================================================================================
+📄 FICHIER : Dockerfile
+================================================================================
+
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+
+================================================================================
+📄 FICHIER : export-projet-complet.txt
+================================================================================
+
+================================================================================
+                    EXPORT COMPLET DU PROJET FORMATION-APP
+                    Date : 2026-04-20 17:58:16
+================================================================================
+
+================================================================================
+📁 DOSSIER : .github
+================================================================================
+
+
+
+
+================================================================================
+📁 DOSSIER : app
+================================================================================
+
+
+
+
+================================================================================
+📄 FICHIER : .gitignore
+================================================================================
+
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.sqlite
+
+
+
+
+================================================================================
+📄 FICHIER : docker-compose.yml
+================================================================================
+
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: formations_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: formations_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d formations_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formations_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@db:5432/formations_db
+      SECRET_KEY: super-secret-key-change-in-prod
+      FLASK_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: formations_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@estsale.ma
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - app_network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    name: formations_postgres_data
+
+networks:
+  app_network:
+    name: formations_network
+    driver: bridge
+
+
+
+================================================================================
+📄 FICHIER : Dockerfile
+================================================================================
+
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+
+================================================================================
+📄 FICHIER : export-projet-complet.txt
+================================================================================
+
+
+
+
+
+================================================================================
+📄 FICHIER : README.md
+================================================================================
+
+# 💫 About Me:
+# 🎓 Formation App<br><br>Application web de gestion de formations - Mini-projet DevOps CI/CD<br><br>## 📋 Description<br><br>Formation App est une application web simple permettant de gérer et consulter un catalogue de formations. Ce projet sert de support pour la mise en place d'une pipeline CI/CD complète.<br><br>## 🚀 Technologies utilisées<br><br>- **Backend** : Python Flask<br>- **Base de données** : PostgreSQL 16<br>- **Conteneurisation** : Docker<br>- **CI/CD** : GitHub Actions<br>- **Versioning** : Git & GitHub<br><br>## 📁 Structure du projet<br><br>formation-app/<br>├── app.py # Application principale Flask<br>├── requirements.txt # Dépendances Python<br>├── Dockerfile # Configuration Docker<br>├── docker-compose.yml # Orchestration des services<br>├── .github/<br>│ └── workflows/<br>│ └── ci-cd.yml # Pipeline CI/CD<br>└── README.md # Documentation<br><br><br>## 🔧 Installation locale<br><br>### Prérequis<br>- Python 3.9+<br>- Docker & Docker Compose<br>- PostgreSQL (optionnel)<br><br>### Lancement avec Docker<br><br>```bash<br># Construire l'image<br>docker build -t formation-app .<br><br>Lancer l'application<br>docker run -d -p 5000:5000 --name formation-app formation-app<br><br>Démarrer les services (app + PostgreSQL)<br>docker-compose up -d<br><br>Arrêter les services<br>docker-compose down<br><br>🔄 Pipeline CI/CD<br>Le pipeline GitHub Actions exécute automatiquement :<br><br>✅ Checkout du code<br><br>🔨 Build de l'image Docker<br><br>🗄️ Test de connexion PostgreSQL<br><br>🚀 Déploiement du conteneur de test<br><br>🧪 Tests des endpoints API<br><br>🧹 Nettoyage<br><br>
+
+
+# 💻 Tech Stack:
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+
+
+
+
+================================================================================
+📄 FICHIER : requirements.txt
+================================================================================
+
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+gunicorn==22.0.0
+
+
+
+
+================================================================================
+📄 FICHIER : run.py
+================================================================================
+
+from app import create_app
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
+
+
+
+
+================================================================================
+📁 DOSSIER : .github\workflows
+================================================================================
+
+
+
+
+================================================================================
+📄 FICHIER : .github\workflows\ci-cd.yml
+================================================================================
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: formations_db
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin123
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t formation-app .
+
+      - name: Run PostgreSQL test
+        run: |
+          docker run --rm --network host postgres:16-alpine \
+            psql -h localhost -U admin -d formations_db -c "SELECT 1"
+
+      - name: Run container
+        run: docker run -d -p 5000:5000 --name app formation-app
+
+      - name: Test application
+        run: |
+          sleep 5
+          curl --fail http://localhost:5000/
+          curl --fail http://localhost:5000/formations
+
+      - name: Cleanup
+        run: |
+          docker stop app
+          docker rm app
+
+
+
+================================================================================
+📁 DOSSIER : app\templates
+================================================================================
+
+
+
+
+================================================================================
+📄 FICHIER : app\__init__.py
+================================================================================
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+db = SQLAlchemy()
+
+def create_app():
+    app = Flask(__name__)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'DATABASE_URL',
+        'postgresql://admin:admin123@db:5432/formations_db'
+    )
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
+
+    db.init_app(app)
+
+    from app.routes import main
+    app.register_blueprint(main)
+
+    with app.app_context():
+        db.create_all()
+        from app.models import Formation
+        if Formation.query.count() == 0:
+            seed_data()
+
+    return app
+
+
+def seed_data():
+    from app.models import Formation
+    formations = [
+        Formation(
+            titre="Développement Web Full Stack",
+            description="Maîtrisez HTML, CSS, JavaScript, React et Node.js pour créer des applications web modernes.",
+            duree="6 mois",
+            niveau="Débutant → Intermédiaire",
+            categorie="Développement Web"
+        ),
+        Formation(
+            titre="DevOps & Cloud Computing",
+            description="Docker, Kubernetes, CI/CD, AWS et Azure. Automatisez et scalez vos infrastructures.",
+            duree="4 mois",
+            niveau="Intermédiaire",
+            categorie="Infrastructure"
+        ),
+        Formation(
+            titre="Intelligence Artificielle & Machine Learning",
+            description="Python, TensorFlow, PyTorch. Construisez des modèles prédictifs et des réseaux de neurones.",
+            duree="5 mois",
+            niveau="Intermédiaire → Avancé",
+            categorie="Data & IA"
+        ),
+        Formation(
+            titre="Cybersécurité & Ethical Hacking",
+            description="Pentest, analyse de vulnérabilités, cryptographie. Sécurisez les systèmes d'information.",
+            duree="4 mois",
+            niveau="Intermédiaire",
+            categorie="Sécurité"
+        ),
+        Formation(
+            titre="Data Engineering avec Python",
+            description="Pandas, SQL, Spark, Airflow. Construisez des pipelines de données robustes et scalables.",
+            duree="3 mois",
+            niveau="Intermédiaire",
+            categorie="Data & IA"
+        ),
+        Formation(
+            titre="Développement Mobile Android & iOS",
+            description="React Native et Flutter pour créer des applications mobiles cross-platform performantes.",
+            duree="4 mois",
+            niveau="Débutant → Intermédiaire",
+            categorie="Développement Mobile"
+        ),
+    ]
+    db.session.bulk_save_objects(formations)
+    db.session.commit()
+
+
+
+
+================================================================================
+📄 FICHIER : app\models.py
+================================================================================
+
+from app import db
+from datetime import datetime
+
+class Formation(db.Model):
+    __tablename__ = 'formations'
+
+    id          = db.Column(db.Integer, primary_key=True)
+    titre       = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    duree       = db.Column(db.String(50), nullable=False)
+    niveau      = db.Column(db.String(100), nullable=False)
+    categorie   = db.Column(db.String(100), nullable=False)
+    created_at  = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id':          self.id,
+            'titre':       self.titre,
+            'description': self.description,
+            'duree':       self.duree,
+            'niveau':      self.niveau,
+            'categorie':   self.categorie,
+            'created_at':  self.created_at.isoformat()
+        }
+
+    def __repr__(self):
+        return f'<Formation {self.titre}>'
+
+
+
+
+================================================================================
+📄 FICHIER : app\routes.py
+================================================================================
+
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from app import db
+from app.models import Formation
+
+main = Blueprint('main', __name__)
+
+
+@main.route('/')
+def index():
+    total = Formation.query.count()
+    categories = db.session.query(Formation.categorie, db.func.count(Formation.id))\
+        .group_by(Formation.categorie).all()
+    return render_template('index.html', total=total, categories=categories)
+
+
+@main.route('/formations')
+def formations():
+    categorie = request.args.get('categorie', '')
+    search    = request.args.get('search', '')
+
+    query = Formation.query
+    if categorie:
+        query = query.filter_by(categorie=categorie)
+    if search:
+        query = query.filter(Formation.titre.ilike(f'%{search}%'))
+
+    formations  = query.order_by(Formation.id).all()
+    categories  = db.session.query(Formation.categorie).distinct().all()
+    categories  = [c[0] for c in categories]
+    return render_template('formations.html',
+                           formations=formations,
+                           categories=categories,
+                           selected_cat=categorie,
+                           search=search)
+
+
+@main.route('/formations/add', methods=['GET', 'POST'])
+def add_formation():
+    if request.method == 'POST':
+        f = Formation(
+            titre       = request.form['titre'],
+            description = request.form['description'],
+            duree       = request.form['duree'],
+            niveau      = request.form['niveau'],
+            categorie   = request.form['categorie'],
+        )
+        db.session.add(f)
+        db.session.commit()
+        flash('Formation ajoutée avec succès !', 'success')
+        return redirect(url_for('main.formations'))
+    return render_template('add_formation.html')
+
+
+@main.route('/formations/delete/<int:id>', methods=['POST'])
+def delete_formation(id):
+    f = Formation.query.get_or_404(id)
+    db.session.delete(f)
+    db.session.commit()
+    flash(f'Formation "{f.titre}" supprimée.', 'info')
+    return redirect(url_for('main.formations'))
+
+
+# ── API JSON (pour tester la DB via curl / Postman) ──────────────────────────
+
+@main.route('/api/formations')
+def api_formations():
+    formations = Formation.query.all()
+    return jsonify([f.to_dict() for f in formations])
+
+
+@main.route('/api/formations/<int:id>')
+def api_formation(id):
+    f = Formation.query.get_or_404(id)
+    return jsonify(f.to_dict())
+
+
+@main.route('/health')
+def health():
+    try:
+        db.session.execute(db.text('SELECT 1'))
+        return jsonify({'status': 'ok', 'database': 'connected'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'database': str(e)}), 500
+
+
+
+
+================================================================================
+📄 FICHIER : app\templates\add_formation.html
+================================================================================
+
+{% extends "base.html" %}
+{% block title %}Ajouter une formation{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .back-link {
+    display: inline-flex; align-items: center; gap: .3rem;
+    color: var(--muted); text-decoration: none;
+    font-size: .875rem; margin-bottom: 1.25rem;
+    transition: color .15s;
+  }
+  .back-link:hover { color: var(--text); }
+
+  .form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+  }
+  .form-card h1 {
+    font-size: 1.35rem; font-weight: 800;
+    color: var(--text); margin-bottom: 1.75rem;
+  }
+
+  .form-group { margin-bottom: 1.2rem; }
+
+  label {
+    display: block;
+    font-size: .8rem; font-weight: 600;
+    color: var(--muted);
+    margin-bottom: .4rem;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+
+  input[type=text],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: .55rem .9rem;
+    font-family: inherit; font-size: .9rem;
+    outline: none; transition: border-color .15s, box-shadow .15s;
+    -webkit-appearance: none;
+  }
+  input[type=text]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(47,129,247,.15);
+  }
+  textarea { resize: vertical; min-height: 85px; }
+  select option { background: var(--surface); }
+
+  .form-actions {
+    display: flex; gap: .75rem; justify-content: flex-end;
+    margin-top: 1.75rem; flex-wrap: wrap;
+  }
+  .btn-cancel {
+    display: inline-flex; align-items: center;
+    padding: .5rem 1.1rem; border-radius: 6px;
+    font-size: .875rem; font-weight: 600;
+    border: 1px solid var(--border);
+    color: var(--muted); text-decoration: none;
+    transition: color .15s, border-color .15s;
+  }
+  .btn-cancel:hover { color: var(--text); border-color: var(--muted); }
+
+  @media (max-width: 480px) {
+    .form-card { padding: 1.25rem 1rem; }
+    .form-actions { justify-content: stretch; }
+    .form-actions .btn,
+    .form-actions .btn-cancel { flex: 1; justify-content: center; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('main.formations') }}" class="back-link">← Retour aux formations</a>
+
+<div class="form-card">
+  <h1>Ajouter une formation</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label for="titre">Titre *</label>
+      <input type="text" id="titre" name="titre" required
+             placeholder="ex : Développement Web Full Stack"/>
+    </div>
+    <div class="form-group">
+      <label for="description">Description *</label>
+      <textarea id="description" name="description" required
+                placeholder="Décrivez le contenu de la formation…"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="duree">Durée *</label>
+      <input type="text" id="duree" name="duree" required
+             placeholder="ex : 3 mois, 120 heures"/>
+    </div>
+    <div class="form-group">
+      <label for="niveau">Niveau *</label>
+      <select id="niveau" name="niveau" required>
+        <option value="">-- Choisir --</option>
+        <option>Débutant</option>
+        <option>Débutant → Intermédiaire</option>
+        <option>Intermédiaire</option>
+        <option>Intermédiaire → Avancé</option>
+        <option>Avancé</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="categorie">Catégorie *</label>
+      <input type="text" id="categorie" name="categorie" required
+             placeholder="ex : Développement Web, Data &amp; IA, Sécurité…"/>
+    </div>
+    <div class="form-actions">
+      <a href="{{ url_for('main.formations') }}" class="btn-cancel">Annuler</a>
+      <button type="submit" class="btn btn-primary" style="padding:.5rem 1.4rem;font-size:.9rem;">
+        Enregistrer
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+
+
+================================================================================
+📄 FICHIER : app\templates\base.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}EST Salé — Formations{% endblock %}</title>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --border:  #21262d;
+      --accent:  #2f81f7;
+      --accent2: #39d0d8;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --danger:  #f85149;
+      --success: #3fb950;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ── NAV ────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 1.1rem;
+      text-decoration: none; color: var(--text);
+      display: flex; align-items: center; gap: .5rem;
+      white-space: nowrap;
+    }
+    .nav-brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; gap: 1.2rem; align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: .9rem; font-weight: 500;
+      transition: color .15s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    /* ── BUTTONS ────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .35rem;
+      padding: .4rem .95rem; border-radius: 6px;
+      font-size: .85rem; font-weight: 600; cursor: pointer;
+      border: none; text-decoration: none; transition: all .15s;
+      line-height: 1.5;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1f6ed4; }
+    .btn-danger {
+      background: transparent; color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    /* ── FLASH ──────────────────────────────── */
+    .flash-wrap { padding: .6rem 1.5rem; }
+    .flash {
+      padding: .7rem 1rem; border-radius: 6px;
+      font-size: .875rem; font-weight: 500;
+      margin-bottom: .4rem;
+    }
+    .flash.success { background: #0d2a18; color: var(--success); border: 1px solid #1a4a28; }
+    .flash.info    { background: #0d1f35; color: #79c0ff;        border: 1px solid #1a3a5c; }
+    .flash.error   { background: #2a0d0d; color: #ff7b72;        border: 1px solid #4a1a1a; }
+
+    /* ── MAIN ───────────────────────────────── */
+    main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── FOOTER ─────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: .82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: .5rem; padding-top: .5rem; padding-bottom: .5rem; }
+      .nav-links { gap: .75rem; }
+      .nav-links a { font-size: .82rem; }
+      main { padding: 1.25rem 1rem; }
+    }
+  </style>
+  {% block extra_styles %}{% endblock %}
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('main.index') }}" class="nav-brand">
+    🎓 <span>EST</span>&nbsp;Salé
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('main.index') }}"
+       class="{{ 'active' if request.endpoint == 'main.index' else '' }}">Accueil</a>
+    <a href="{{ url_for('main.formations') }}"
+       class="{{ 'active' if request.endpoint == 'main.formations' else '' }}">Formations</a>
+    <a href="{{ url_for('main.api_formations') }}" target="_blank">API JSON</a>
+    <a href="{{ url_for('main.health') }}" target="_blank">Health</a>
+    <a href="{{ url_for('main.add_formation') }}" class="btn btn-primary">+ Ajouter</a>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+        <div class="flash {{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+  EST Salé — Université Mohammed V de Rabat &nbsp;|&nbsp;
+  Mini-Projet DevOps &nbsp;|&nbsp;
+  <a href="/health">DB Status</a>
+</footer>
+</body>
+</html>
+
+
+
+================================================================================
+📄 FICHIER : app\templates\formations.html
+================================================================================
+
+{% extends "base.html" %}
+{% block title %}Formations — EST Salé{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem;
+  }
+  .page-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+
+  /* ── FILTERS ── */
+  .filters {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .85rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .filters form {
+    display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+  }
+  .filters input,
+  .filters select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: .45rem .85rem;
+    font-family: inherit; font-size: .875rem;
+    outline: none; transition: border-color .15s;
+  }
+  .filters input:focus,
+  .filters select:focus { border-color: var(--accent); }
+  .filters input { flex: 1; min-width: 180px; }
+  .filters select option { background: var(--surface); }
+  .btn-reset {
+    display: inline-flex; align-items: center;
+    padding: .45rem .85rem; border-radius: 6px;
+    font-size: .85rem; font-weight: 500;
+    border: 1px solid var(--border);
+    color: var(--muted); text-decoration: none;
+    transition: color .15s, border-color .15s;
+  }
+  .btn-reset:hover { color: var(--text); border-color: var(--muted); }
+
+  .result-count { color: var(--muted); font-size: .85rem; margin-bottom: 1.1rem; }
+  .result-count strong { color: var(--text); }
+
+  /* ── CARDS ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex; flex-direction: column;
+    transition: border-color .15s, transform .15s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card-cat {
+    font-size: .72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--accent2); margin-bottom: .6rem;
+  }
+  .card h3 {
+    font-size: .97rem; font-weight: 700;
+    color: var(--text); margin-bottom: .5rem;
+    line-height: 1.4;
+  }
+  .card p {
+    color: var(--muted); font-size: .855rem;
+    line-height: 1.6; flex: 1; margin-bottom: .85rem;
+  }
+  .card-meta {
+    display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .85rem;
+  }
+  .tag {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: .18rem .55rem;
+    font-size: .775rem; color: var(--muted);
+  }
+  .card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: .75rem; border-top: 1px solid var(--border);
+  }
+  .card-id { color: var(--muted); font-size: .75rem; font-family: monospace; }
+
+  /* ── EMPTY ── */
+  .empty {
+    text-align: center; padding: 3.5rem 1rem;
+    color: var(--muted); grid-column: 1 / -1;
+  }
+  .empty h3 { font-size: 1.1rem; margin-bottom: .5rem; color: var(--text); }
+  .empty a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Formations disponibles</h1>
+  <a href="{{ url_for('main.add_formation') }}" class="btn btn-primary">+ Nouvelle formation</a>
+</div>
+
+<div class="filters">
+  <form method="GET">
+    <input type="text" name="search"
+           placeholder="Rechercher une formation…"
+           value="{{ search }}"/>
+    <select name="categorie">
+      <option value="">Toutes les catégories</option>
+      {% for cat in categories %}
+        <option value="{{ cat }}" {{ 'selected' if cat == selected_cat else '' }}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Filtrer</button>
+    {% if search or selected_cat %}
+      <a href="{{ url_for('main.formations') }}" class="btn-reset">Réinitialiser</a>
+    {% endif %}
+  </form>
+</div>
+
+<p class="result-count">
+  <strong>{{ formations | length }}</strong>
+  formation{{ 's' if formations | length != 1 else '' }} trouvée{{ 's' if formations | length != 1 else '' }}
+</p>
+
+<div class="grid">
+  {% if formations %}
+    {% for f in formations %}
+    <div class="card">
+      <div class="card-cat">{{ f.categorie }}</div>
+      <h3>{{ f.titre }}</h3>
+      <p>{{ f.description }}</p>
+      <div class="card-meta">
+        <span class="tag">🕐 {{ f.duree }}</span>
+        <span class="tag">📊 {{ f.niveau }}</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-id">#{{ f.id }}</span>
+        <form action="{{ url_for('main.delete_formation', id=f.id) }}" method="POST"
+              onsubmit="return confirm('Supprimer « {{ f.titre }} » ?')">
+          <button type="submit" class="btn btn-danger">Supprimer</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">
+      <h3>Aucune formation trouvée</h3>
+      <p>Modifiez vos critères ou <a href="{{ url_for('main.add_formation') }}">ajoutez une formation</a>.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+
+================================================================================
+📄 FICHIER : app\templates\index.html
+================================================================================
+
+{% extends "base.html" %}
+{% block title %}Accueil — EST Salé Formations{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 1rem 2.5rem;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(47,129,247,.12);
+    border: 1px solid rgba(47,129,247,.3);
+    color: var(--accent2);
+    font-size: .78rem; font-weight: 600;
+    padding: .28rem .75rem; border-radius: 20px;
+    margin-bottom: 1.2rem;
+    letter-spacing: .05em; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800; line-height: 1.15;
+    color: var(--text);
+    margin-bottom: .9rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+  }
+  .hero-actions {
+    display: flex; gap: .75rem;
+    justify-content: center; flex-wrap: wrap;
+  }
+  .btn-lg { padding: .55rem 1.4rem; font-size: .95rem; }
+  .btn-outline {
+    display: inline-flex; align-items: center;
+    padding: .55rem 1.4rem; border-radius: 6px;
+    font-size: .95rem; font-weight: 600;
+    border: 1px solid var(--border);
+    color: var(--text); text-decoration: none;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 2.5rem 0;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: border-color .15s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-num {
+    font-size: 2rem; font-weight: 800;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: .82rem;
+    margin-top: .3rem;
+  }
+
+  /* ── CATEGORIES ── */
+  .section-title {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .75rem;
+    margin-bottom: 2.5rem;
+  }
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    text-decoration: none; color: var(--text);
+    transition: border-color .15s, transform .15s;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .cat-name { font-weight: 600; font-size: .9rem; }
+  .cat-count {
+    background: rgba(47,129,247,.15);
+    color: var(--accent);
+    font-size: .78rem; font-weight: 700;
+    padding: .18rem .55rem; border-radius: 5px;
+  }
+
+  /* ── API BOX ── */
+  .api-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .api-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: .85rem; }
+  .api-row {
+    display: flex; align-items: center; gap: .65rem;
+    padding: .4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .api-row:last-child { border-bottom: none; }
+  .method {
+    font-size: .68rem; font-weight: 700;
+    padding: .18rem .5rem; border-radius: 4px;
+    text-transform: uppercase; min-width: 40px;
+    text-align: center; flex-shrink: 0;
+  }
+  .get { background: #0d2a18; color: var(--success); border: 1px solid #1a4a28; }
+  .endpoint-path { font-family: monospace; font-size: .85rem; color: var(--accent2); }
+  .endpoint-desc { color: var(--muted); font-size: .8rem; margin-left: auto; }
+
+  @media (max-width: 500px) {
+    .endpoint-desc { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-tag">🎓 EST Salé — Université Mohammed V</div>
+  <h1>Catalogue des <em>Formations</em><br>Technologiques</h1>
+  <p>Programmes de formation en informatique, développement et infrastructure cloud.</p>
+  <div class="hero-actions">
+    <a href="{{ url_for('main.formations') }}" class="btn btn-primary btn-lg">
+      Voir les formations →
+    </a>
+    <a href="/api/formations" target="_blank" class="btn-outline">API JSON</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-num">{{ total }}</div>
+    <div class="stat-label">Formations disponibles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ categories | length }}</div>
+    <div class="stat-label">Domaines couverts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">🐘</div>
+    <div class="stat-label">PostgreSQL — base de données live</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">🐳</div>
+    <div class="stat-label">Déployé via Docker Compose</div>
+  </div>
+</div>
+
+<h2 class="section-title">Par domaine</h2>
+<div class="cat-grid">
+  {% for cat, count in categories %}
+  <a href="{{ url_for('main.formations', categorie=cat) }}" class="cat-card">
+    <span class="cat-name">{{ cat }}</span>
+    <span class="cat-count">{{ count }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+<h2 class="section-title">Endpoints API disponibles</h2>
+<div class="api-box">
+  <h3>REST JSON</h3>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="endpoint-path">/api/formations</span>
+    <span class="endpoint-desc">Liste toutes les formations</span>
+  </div>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="endpoint-path">/api/formations/&lt;id&gt;</span>
+    <span class="endpoint-desc">Détail d'une formation</span>
+  </div>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="endpoint-path">/health</span>
+    <span class="endpoint-desc">Statut de la base de données</span>
+  </div>
+</div>
+{% endblock %}
+
+
+
+================================================================================
+                    FIN DE L'EXPORT
+                    Total : 19 éléments exportés
+================================================================================

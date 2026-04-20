@@ -4,85 +4,118 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}EST Salé — Formations{% endblock %}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg:       #0a0e1a;
-      --surface:  #111827;
-      --border:   #1e2d45;
-      --accent:   #3b82f6;
-      --accent2:  #06b6d4;
-      --text:     #e2e8f0;
-      --muted:    #64748b;
-      --success:  #10b981;
-      --danger:   #ef4444;
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --border:  #21262d;
+      --accent:  #2f81f7;
+      --accent2: #39d0d8;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --danger:  #f85149;
+      --success: #3fb950;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html { scroll-behavior: smooth; }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
-    /* ── NAV ── */
+    /* ── NAV ────────────────────────────────── */
     nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(10,14,26,.85);
-      backdrop-filter: blur(16px);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
+      padding: 0 1.5rem;
       display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
+      height: 60px;
     }
     .nav-brand {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.2rem;
+      font-weight: 700; font-size: 1.1rem;
       text-decoration: none; color: var(--text);
       display: flex; align-items: center; gap: .5rem;
+      white-space: nowrap;
     }
     .nav-brand span { color: var(--accent); }
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+
+    .nav-links {
+      display: flex; gap: 1.2rem; align-items: center;
+      flex-wrap: wrap;
+    }
     .nav-links a {
       text-decoration: none; color: var(--muted);
       font-size: .9rem; font-weight: 500;
-      transition: color .2s;
+      transition: color .15s;
+      white-space: nowrap;
     }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    /* ── BUTTONS ────────────────────────────── */
     .btn {
-      display: inline-flex; align-items: center; gap: .4rem;
-      padding: .45rem 1rem; border-radius: 8px;
+      display: inline-flex; align-items: center; gap: .35rem;
+      padding: .4rem .95rem; border-radius: 6px;
       font-size: .85rem; font-weight: 600; cursor: pointer;
-      border: none; text-decoration: none; transition: all .2s;
+      border: none; text-decoration: none; transition: all .15s;
+      line-height: 1.5;
     }
     .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #2563eb; }
-    .btn-danger  { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+    .btn-primary:hover { background: #1f6ed4; }
+    .btn-danger {
+      background: transparent; color: var(--danger);
+      border: 1px solid var(--danger);
+    }
     .btn-danger:hover { background: var(--danger); color: #fff; }
 
-    /* ── FLASH ── */
-    .flash-wrap { padding: .75rem 2rem; }
+    /* ── FLASH ──────────────────────────────── */
+    .flash-wrap { padding: .6rem 1.5rem; }
     .flash {
-      padding: .75rem 1.2rem; border-radius: 8px;
-      font-size: .875rem; font-weight: 500; margin-bottom: .5rem;
+      padding: .7rem 1rem; border-radius: 6px;
+      font-size: .875rem; font-weight: 500;
+      margin-bottom: .4rem;
     }
-    .flash.success { background: #052e16; color: #4ade80; border: 1px solid #166534; }
-    .flash.info    { background: #0c1a2e; color: #7dd3fc; border: 1px solid #1e40af; }
-    .flash.error   { background: #2d0a0a; color: #fca5a5; border: 1px solid #991b1b; }
+    .flash.success { background: #0d2a18; color: var(--success); border: 1px solid #1a4a28; }
+    .flash.info    { background: #0d1f35; color: #79c0ff;        border: 1px solid #1a3a5c; }
+    .flash.error   { background: #2a0d0d; color: #ff7b72;        border: 1px solid #4a1a1a; }
 
-    /* ── MAIN ── */
-    main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    /* ── MAIN ───────────────────────────────── */
+    main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
 
-    /* ── FOOTER ── */
+    /* ── FOOTER ─────────────────────────────── */
     footer {
-      text-align: center; padding: 2rem;
-      color: var(--muted); font-size: .8rem;
-      border-top: 1px solid var(--border); margin-top: 4rem;
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: .82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
     }
     footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: .5rem; padding-top: .5rem; padding-bottom: .5rem; }
+      .nav-links { gap: .75rem; }
+      .nav-links a { font-size: .82rem; }
+      main { padding: 1.25rem 1rem; }
+    }
   </style>
   {% block extra_styles %}{% endblock %}
 </head>
@@ -94,9 +127,9 @@
   </a>
   <div class="nav-links">
     <a href="{{ url_for('main.index') }}"
-       class="{{ 'active' if request.endpoint == 'main.index' }}">Accueil</a>
+       class="{{ 'active' if request.endpoint == 'main.index' else '' }}">Accueil</a>
     <a href="{{ url_for('main.formations') }}"
-       class="{{ 'active' if request.endpoint == 'main.formations' }}">Formations</a>
+       class="{{ 'active' if request.endpoint == 'main.formations' else '' }}">Formations</a>
     <a href="{{ url_for('main.api_formations') }}" target="_blank">API JSON</a>
     <a href="{{ url_for('main.health') }}" target="_blank">Health</a>
     <a href="{{ url_for('main.add_formation') }}" class="btn btn-primary">+ Ajouter</a>
