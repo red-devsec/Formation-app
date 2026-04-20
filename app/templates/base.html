@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}EST Salé — Formations{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #0a0e1a;
+      --surface:  #111827;
+      --border:   #1e2d45;
+      --accent:   #3b82f6;
+      --accent2:  #06b6d4;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --success:  #10b981;
+      --danger:   #ef4444;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,14,26,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.2rem;
+      text-decoration: none; color: var(--text);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: .9rem; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .45rem 1rem; border-radius: 8px;
+      font-size: .85rem; font-weight: 600; cursor: pointer;
+      border: none; text-decoration: none; transition: all .2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-danger  { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    /* ── FLASH ── */
+    .flash-wrap { padding: .75rem 2rem; }
+    .flash {
+      padding: .75rem 1.2rem; border-radius: 8px;
+      font-size: .875rem; font-weight: 500; margin-bottom: .5rem;
+    }
+    .flash.success { background: #052e16; color: #4ade80; border: 1px solid #166534; }
+    .flash.info    { background: #0c1a2e; color: #7dd3fc; border: 1px solid #1e40af; }
+    .flash.error   { background: #2d0a0a; color: #fca5a5; border: 1px solid #991b1b; }
+
+    /* ── MAIN ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 2rem;
+      color: var(--muted); font-size: .8rem;
+      border-top: 1px solid var(--border); margin-top: 4rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+  {% block extra_styles %}{% endblock %}
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('main.index') }}" class="nav-brand">
+    🎓 <span>EST</span>&nbsp;Salé
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('main.index') }}"
+       class="{{ 'active' if request.endpoint == 'main.index' }}">Accueil</a>
+    <a href="{{ url_for('main.formations') }}"
+       class="{{ 'active' if request.endpoint == 'main.formations' }}">Formations</a>
+    <a href="{{ url_for('main.api_formations') }}" target="_blank">API JSON</a>
+    <a href="{{ url_for('main.health') }}" target="_blank">Health</a>
+    <a href="{{ url_for('main.add_formation') }}" class="btn btn-primary">+ Ajouter</a>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+        <div class="flash {{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+  EST Salé — Université Mohammed V de Rabat &nbsp;|&nbsp;
+  Mini-Projet DevOps &nbsp;|&nbsp;
+  <a href="/health">DB Status</a>
+</footer>
+</body>
+</html>

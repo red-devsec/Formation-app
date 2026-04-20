@@ -1,0 +1,175 @@
+name: CI/CD — Formation App
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  IMAGE_NAME: formation-app
+  REGISTRY:   ghcr.io
+
+jobs:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 1 : Tests & Lint
+  # ────────────────────────────────────────────────────────────────────────────
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB:       formations_db_test
+          POSTGRES_USER:     admin
+          POSTGRES_PASSWORD: admin123
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U admin"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: 🧪 Run tests
+        env:
+          DATABASE_URL: postgresql://admin:admin123@localhost:5432/formations_db_test
+        run: |
+          python -c "
+          from app import create_app, db
+          from app.models import Formation
+          app = create_app()
+          with app.app_context():
+              # Test 1 : connexion base de données
+              result = db.session.execute(db.text('SELECT 1')).scalar()
+              assert result == 1, 'DB connection failed'
+              print('✅ Test 1 PASS : DB connectée')
+
+              # Test 2 : données seed
+              count = Formation.query.count()
+              assert count >= 6, f'Expected >= 6 formations, got {count}'
+              print(f'✅ Test 2 PASS : {count} formations en base')
+
+              # Test 3 : endpoint health via client de test
+              client = app.test_client()
+              resp = client.get('/health')
+              assert resp.status_code == 200
+              print('✅ Test 3 PASS : /health OK')
+
+              # Test 4 : API JSON
+              resp = client.get('/api/formations')
+              assert resp.status_code == 200
+              data = resp.get_json()
+              assert len(data) >= 6
+              print(f'✅ Test 4 PASS : API retourne {len(data)} formations')
+
+              # Test 5 : ajout en base
+              f = Formation(
+                  titre='Test Formation',
+                  description='Description test',
+                  duree='1 mois',
+                  niveau='Débutant',
+                  categorie='Test'
+              )
+              db.session.add(f)
+              db.session.commit()
+              assert f.id is not None
+              print('✅ Test 5 PASS : insertion en base réussie')
+
+              print()
+              print('🎉 Tous les tests passent !')
+          "
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 2 : Build Docker Image
+  # ────────────────────────────────────────────────────────────────────────────
+  build:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔑 Login to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏷️ Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: 🏗️ Build & Push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags:    ${{ steps.meta.outputs.tags }}
+          labels:  ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to:   type=gha,mode=max
+
+      - name: 📋 Image size report
+        run: |
+          docker images ${{ env.IMAGE_NAME }} --format \
+            "Image: {{.Repository}}:{{.Tag}} | Size: {{.Size}}"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 3 : Deploy (main only)
+  # ────────────────────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+
+    steps:
+      - name: 🚀 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:     ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key:      ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/formation-app
+            git pull origin main
+            docker compose pull app
+            docker compose up -d --force-recreate app
+            docker compose exec -T app python -c "
+              from app import create_app, db
+              app = create_app()
+              with app.app_context():
+                  db.create_all()
+                  print('DB migrations OK')
+            "
+            echo "✅ Déploiement terminé : $(date)"

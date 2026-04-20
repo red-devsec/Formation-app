@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Ajouter une formation{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .form-card {
+    max-width: 640px; margin: 2rem auto;
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 2.5rem;
+  }
+  .form-card h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem; font-weight: 800; margin-bottom: 2rem;
+  }
+  .form-group { margin-bottom: 1.4rem; }
+  label {
+    display: block; font-size: .85rem; font-weight: 600;
+    color: var(--muted); margin-bottom: .45rem; text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  input[type=text], textarea, select {
+    width: 100%;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: .65rem 1rem;
+    font-family: inherit; font-size: .9rem; outline: none;
+    transition: border-color .2s;
+  }
+  input[type=text]:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  .form-actions {
+    display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;
+  }
+  .back-link {
+    color: var(--muted); text-decoration: none; font-size: .875rem;
+    display: inline-flex; align-items: center; gap: .3rem;
+  }
+  .back-link:hover { color: var(--text); }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('main.formations') }}" class="back-link">← Retour aux formations</a>
+<div class="form-card">
+  <h1>Ajouter une formation</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label>Titre *</label>
+      <input type="text" name="titre" required placeholder="ex: Développement Web Full Stack"/>
+    </div>
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea name="description" required placeholder="Décrivez le contenu de la formation…"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Durée *</label>
+      <input type="text" name="duree" required placeholder="ex: 3 mois, 120 heures"/>
+    </div>
+    <div class="form-group">
+      <label>Niveau *</label>
+      <select name="niveau" required>
+        <option value="">-- Choisir --</option>
+        <option>Débutant</option>
+        <option>Débutant → Intermédiaire</option>
+        <option>Intermédiaire</option>
+        <option>Intermédiaire → Avancé</option>
+        <option>Avancé</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Catégorie *</label>
+      <input type="text" name="categorie" required placeholder="ex: Développement Web, Data & IA, Sécurité…"/>
+    </div>
+    <div class="form-actions">
+      <a href="{{ url_for('main.formations') }}" class="btn-ghost"
+         style="display:inline-flex;align-items:center;padding:.6rem 1.2rem;border-radius:8px;
+                border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.875rem;">
+        Annuler
+      </a>
+      <button type="submit" class="btn btn-primary" style="padding:.6rem 1.6rem;font-size:.9rem;">
+        Enregistrer
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

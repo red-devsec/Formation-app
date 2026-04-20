@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Accueil — EST Salé Formations{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero {
+    text-align: center;
+    padding: 5rem 1rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -10%,
+      rgba(59,130,246,.18), transparent);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(59,130,246,.12);
+    border: 1px solid rgba(59,130,246,.3);
+    color: var(--accent2);
+    font-size: .8rem; font-weight: 600;
+    padding: .3rem .8rem; border-radius: 20px;
+    margin-bottom: 1.5rem; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800; line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    color: var(--muted); font-size: 1.05rem;
+    max-width: 540px; margin: 0 auto 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .6rem 1.4rem; border-radius: 8px;
+    font-size: .9rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); color: var(--text);
+    text-decoration: none; transition: all .2s; background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-lg { padding: .7rem 1.8rem; font-size: .95rem; }
+
+  /* Stats */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 1.5rem; margin: 3rem 0;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; text-align: center;
+    transition: border-color .2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { color: var(--muted); font-size: .85rem; margin-top: .25rem; }
+
+  /* Categories */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem;
+  }
+  .cat-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+    gap: 1rem; margin-bottom: 3rem;
+  }
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    text-decoration: none; color: var(--text);
+    transition: all .2s;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59,130,246,.1);
+  }
+  .cat-name { font-weight: 600; font-size: .95rem; }
+  .cat-count {
+    background: rgba(59,130,246,.15);
+    color: var(--accent);
+    font-size: .8rem; font-weight: 700;
+    padding: .2rem .6rem; border-radius: 6px;
+  }
+
+  /* API teaser */
+  .api-box {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; margin-top: 1rem;
+  }
+  .api-box h3 { font-family: 'Syne', sans-serif; margin-bottom: 1rem; }
+  .api-row {
+    display: flex; align-items: center; gap: .75rem;
+    margin-bottom: .6rem;
+  }
+  .method {
+    font-size: .7rem; font-weight: 700; padding: .2rem .5rem; border-radius: 4px;
+    text-transform: uppercase; min-width: 45px; text-align: center;
+  }
+  .get  { background: #052e16; color: #4ade80; }
+  .code { font-family: monospace; font-size: .85rem; color: var(--accent2); }
+  .endpoint-desc { color: var(--muted); font-size: .8rem; margin-left: auto; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-tag">🎓 EST Salé — Université Mohammed V</div>
+  <h1>Catalogue des <em>Formations</em><br>Technologiques</h1>
+  <p>Découvrez nos programmes de formation en informatique, développement et infrastructure cloud.</p>
+  <div class="hero-actions">
+    <a href="{{ url_for('main.formations') }}" class="btn btn-primary btn-lg">
+      Voir les formations →
+    </a>
+    <a href="/api/formations" target="_blank" class="btn-ghost btn-lg">
+      API JSON
+    </a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-num">{{ total }}</div>
+    <div class="stat-label">Formations disponibles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ categories | length }}</div>
+    <div class="stat-label">Domaines couverts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">🐘</div>
+    <div class="stat-label">PostgreSQL (base de données live)</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">🐳</div>
+    <div class="stat-label">Déployé avec Docker Compose</div>
+  </div>
+</div>
+
+<!-- Categories -->
+<h2 class="section-title">Par domaine</h2>
+<div class="cat-grid">
+  {% for cat, count in categories %}
+  <a href="{{ url_for('main.formations', categorie=cat) }}" class="cat-card">
+    <span class="cat-name">{{ cat }}</span>
+    <span class="cat-count">{{ count }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+<!-- API endpoints -->
+<h2 class="section-title">API REST disponible</h2>
+<div class="api-box">
+  <h3>Endpoints JSON</h3>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="code">/api/formations</span>
+    <span class="endpoint-desc">Liste toutes les formations</span>
+  </div>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="code">/api/formations/&lt;id&gt;</span>
+    <span class="endpoint-desc">Détail d'une formation</span>
+  </div>
+  <div class="api-row">
+    <span class="method get">GET</span>
+    <span class="code">/health</span>
+    <span class="endpoint-desc">Statut de la base de données</span>
+  </div>
+</div>
+{% endblock %}
