@@ -16,17 +16,17 @@ jobs:
         run: docker build -t formation-app .
 
       - name: Run container
-        run: docker run -d -p 5000:5000 --name app formation-app
+        run: docker run -d -p 5000:5000 -e DATABASE_URL=sqlite:///app.db --name app formation-app
 
-      - name: Check container status
+      - name: Show logs
         run: |
-          sleep 3
+          sleep 5
           docker ps
           docker logs app
 
-      - name: Wait and test
+      - name: Test application
         run: |
-          sleep 10
+          sleep 5
           curl -v http://localhost:5000/
 
       - name: Cleanup
